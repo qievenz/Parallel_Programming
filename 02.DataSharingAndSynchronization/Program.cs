@@ -1,28 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace _02.DataSharingAndSynchronization
 {
     public class BankAccount
     {
-        public object padlock = new object();
-        public int Balance { get; set; }
+        private int balance;
+
+        public int Balance { get => balance; set => balance = value; }
 
         public void Deposit(int amount)
         {
-            lock (padlock)
-            {
-                Balance += amount;
-            }
+            Interlocked.Add(ref balance, amount);
+
+            Thread.MemoryBarrier(); //Evita que lo que esta antes no se ejecute antes que lo que este abajo de este barrier
         }
 
         public void Withdraw(int amount)
         {
-            lock (padlock)
-            {
-                Balance -= amount;
-            }
+            Interlocked.Add(ref balance, -amount);
         }
     }
     class Program
