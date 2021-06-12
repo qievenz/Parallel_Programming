@@ -1,14 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace _02.DataSharingAndSynchronization
+﻿namespace _02.DataSharingAndSynchronization
 {
     public static class Program
     {
         public static void Main()
         {
-
+            CriticalSections.Run();
+            InterlockedOperations.Run();
+            ReaderWriterLocks.Run();
+            MutexExample.Run();
+            SpinLocking.Run();
         }
     }
 }

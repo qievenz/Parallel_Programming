@@ -78,7 +78,7 @@ namespace _02.DataSharingAndSynchronization
             Console.WriteLine($"Final balance is {ba.Balance}.");
         }
 
-        static void Ejemplo(string[] args)
+        internal static void Run()
         {
             //SpinLockDemo();
 

@@ -32,7 +32,7 @@ namespace _02.DataSharingAndSynchronization
             }
         }
 
-        static void Ejemplo(string[] args)
+        internal static void Run()
         {
             var tasks = new List<Task>();
             var ba = new BankAccount();
