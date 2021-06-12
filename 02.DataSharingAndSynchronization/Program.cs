@@ -13,14 +13,12 @@ namespace _02.DataSharingAndSynchronization
 
         public void Deposit(int amount)
         {
-            Interlocked.Add(ref balance, amount);
-
-            Thread.MemoryBarrier(); //Evita que lo que esta antes no se ejecute antes que lo que este abajo de este barrier
+            balance += amount;
         }
 
         public void Withdraw(int amount)
         {
-            Interlocked.Add(ref balance, -amount);
+            balance -= amount;
         }
     }
     class Program
@@ -29,14 +27,26 @@ namespace _02.DataSharingAndSynchronization
         {
             var ba = new BankAccount();
             var tasks = new List<Task>();
+            var spinLock = new SpinLock();
 
             for (int i = 0; i < 10; i++)
             {
+                var lockTaken = false;
+
                 tasks.Add(Task.Factory.StartNew(() =>
                 {
                     for (int i = 0; i < 1000; i++)
                     {
-                        ba.Deposit(100);
+                        var lockTaken = false;
+                        try
+                        {
+                            spinLock.Enter(ref lockTaken);
+                            ba.Deposit(100);
+                        }
+                        finally
+                        {
+                            if (lockTaken) spinLock.Exit();
+                        }
                     }
                 }));
 
@@ -44,7 +54,16 @@ namespace _02.DataSharingAndSynchronization
                 {
                     for (int i = 0; i < 1000; i++)
                     {
-                        ba.Withdraw(100);
+                        var lockTaken = false;
+                        try
+                        {
+                            spinLock.Enter(ref lockTaken);
+                            ba.Withdraw(100);
+                        }
+                        finally
+                        {
+                            if (lockTaken) spinLock.Exit();
+                        }
                     }
                 }));
             }
