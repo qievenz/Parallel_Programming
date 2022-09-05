@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 namespace _04.TaskCoordination
 {
@@ -6,7 +7,12 @@ namespace _04.TaskCoordination
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            ContinuationsDemo.Run();
+            ChildTasks.Run();
+            BarrierDemo.Run();
+            CountDownEventDemo.Run();
+            ResetEventsDemo.Run();
+            SemaphoreDemo.Run();
         }
     }
 }
